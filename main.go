@@ -53,9 +53,7 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		working_dir, _ := os.Getwd()
-
-		user_dir := working_dir + "/uploaded_files/"
+		user_dir := "/home/machineinfoserver/"
 
 		// Check if dir exists, if not create it
 		if _, err := os.Stat(user_dir); os.IsNotExist(err) {
