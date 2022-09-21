@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"runtime"
+	"server/debug"
+	"time"
 )
 
 const timeLayout = "Jan 2, 2006 at 3:04pm (MST)"
@@ -18,21 +21,36 @@ var DBName string
 var logger *log.Logger
 
 func init() {
+
+	debug.Trace_enter()
+	defer debug.Trace_exit()
+	defer debug.TimeTrack(time.Now(), debug.FileFunctionLine())
+
 	logger = log.New(os.Stdout, "", log.Lshortfile|log.LstdFlags)
 }
 
 // uploader
 func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
+
+	debug.Trace_enter()
+	defer debug.Trace_exit()
+	defer debug.TimeTrack(time.Now(), debug.FileFunctionLine())
+
 	dst, err := os.Create("aaa")
 	if err != nil {
 		logger.Printf("Error: %s", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	fmt.Println(debug.FileFunctionLine())
 	defer dst.Close()
 
 	//----------
 	reader, err := r.MultipartReader()
+	debug.Trace_enter()
+	defer debug.Trace_exit()
+	defer debug.TimeTrack(time.Now(), debug.FileFunctionLine())
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -73,6 +91,10 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 		// Wrap dst file creation and copy in function with immediate execution, so when
 		// it returns the deferred dst.Close() is called
 		err = func() error {
+			debug.Trace_enter()
+			defer debug.Trace_exit()
+			defer debug.TimeTrack(time.Now(), debug.FileFunctionLine())
+
 			dst, err := os.Create(user_dir + part.FileName())
 			if err != nil {
 				return err
@@ -96,6 +118,9 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Add the files to the user's file db.
 		file_name := part.FileName()
+		debug.Trace_enter()
+		defer debug.Trace_exit()
+		defer debug.TimeTrack(time.Now(), debug.FileFunctionLine())
 
 		// Change Permissions
 		os.Chmod(file_name, 0600)
