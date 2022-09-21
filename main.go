@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 )
 
 const timeLayout = "Jan 2, 2006 at 3:04pm (MST)"
@@ -52,8 +53,12 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 		if part.FileName() == "" {
 			continue
 		}
-
-		user_dir := "/home/machineinfoserver/"
+		var user_dir string
+		if runtime.GOOS == "linux" {
+			user_dir = "/home/machineinfoserver/"
+		} else {
+			user_dir = "/User/Shared/machineinfoserver/"
+		}
 
 		// Check if dir exists, if not create it
 		if _, err := os.Stat(user_dir); os.IsNotExist(err) {
