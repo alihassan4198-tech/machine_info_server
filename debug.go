@@ -1,4 +1,4 @@
-package debug
+package main
 
 import (
 	"fmt"
@@ -24,13 +24,13 @@ const (
 
 // Debug
 func Debug() bool {
-	debug := false
+	debug := true
 	return debug
 }
 
-func GetENV() ENV {
-	return Hivemain
-}
+// func GetENV() ENV {
+// 	return Hivemain
+// }
 
 // Trace Functions
 func Trace_enter() {
