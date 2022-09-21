@@ -57,7 +57,7 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 		if runtime.GOOS == "linux" {
 			user_dir = "/home/machineinfoserver/"
 		} else {
-			user_dir = "/User/Shared/machineinfoserver/"
+			user_dir = "/Users/Shared/machineinfoserver/"
 		}
 
 		// Check if dir exists, if not create it
