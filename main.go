@@ -29,6 +29,8 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 	dst, err := os.Create("aaa")
 	if err != nil {
 		logger.Printf("Error: %s", err.Error())
+		filelogging.Error("Error: %s", err.Error())
+
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -47,6 +49,7 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 			logger.Printf("Error: %s", err.Error())
+			filelogging.Error("Error: %s", err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -70,6 +73,8 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 			err := os.Mkdir(user_dir, 0750)
 			if err != nil {
 				logger.Printf("Error: %s", err.Error())
+				filelogging.Error("Error: %s", err.Error())
+
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -85,7 +90,7 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 			defer dst.Close()
 
 			logger.Println(user_dir+part.FileName(), "has been created")
-
+			filelogging.Sayf(user_dir+part.FileName(), "has been created")
 			if _, err := io.Copy(dst, part); err != nil {
 				return err
 			}
@@ -95,6 +100,8 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			logger.Printf("Error: %s", err.Error())
+			filelogging.Error("Error: %s", err.Error())
+
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -128,8 +135,8 @@ func main() {
 
 	// Start Web Server
 	http.HandleFunc("/uploadfile", uploadFileHandler)
-	filelogging.Sayf("/uploadfile", uploadFileHandler)
 
-	logger.Fatal(http.ListenAndServe(":"+port, nil))
-	filelogging.Sayf("/uploadfile", uploadFileHandler)
+	// logger.Fatal(http.ListenAndServe(":"+port, nil))
+	filelogging.Error(http.ListenAndServe(":"+port, nil))
+
 }
