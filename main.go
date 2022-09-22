@@ -26,15 +26,27 @@ func init() {
 // uploader
 func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 
-	dst, err := os.Create("aaa")
-	if err != nil {
-		logger.Printf("Error: %s", err.Error())
-		filelogging.Error("Error: %s", err.Error())
+	// dst, err := os.Create("aaa")
+	// if err != nil {
+	// 	logger.Printf("Error: %s", err.Error())
+	// 	filelogging.Error("Error: %s", err.Error())
 
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer dst.Close()
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
+	// defer dst.Close()
+
+	// err = os.Chmod("aaa", 0777)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// stats, err := os.Stat("aaa")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Printf("Permission File After: %s\n", stats.Mode())
+	// filelogging.Sayf("Permission File After: %s\n", stats.Mode())
 
 	reader, err := r.MultipartReader()
 	if err != nil {
