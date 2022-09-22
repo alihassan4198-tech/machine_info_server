@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"server/logging"
 )
 
 const timeLayout = "Jan 2, 2006 at 3:04pm (MST)"
@@ -16,6 +17,7 @@ var DBName string
 * Global logger
  */
 var logger *log.Logger
+var filelogging *logging.Logger
 
 func init() {
 	logger = log.New(os.Stdout, "", log.Lshortfile|log.LstdFlags)
@@ -107,15 +109,27 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	// Define a custom port from .env file.
+	// log := logging.NewLogger()
+	// fmt.Println("log : ", log)
+	filelogging = logging.NewLogger()
+
 	var port string = os.Getenv("PORT")
 	if port == "" {
+		filelogging.Say("Hello No Port")
 		logger.Println("no port name provided, using 3010")
 		port = "3010"
 	}
+
 	logger.Println("Using port: ", port)
+	filelogging.Say("Using port: " + port)
+
 	logger.Println("Starting Uploader...")
+	filelogging.Say("Starting Uploader...")
 
 	// Start Web Server
 	http.HandleFunc("/uploadfile", uploadFileHandler)
+	filelogging.Sayf("/uploadfile", uploadFileHandler)
+
 	logger.Fatal(http.ListenAndServe(":"+port, nil))
+	filelogging.Sayf("/uploadfile", uploadFileHandler)
 }
